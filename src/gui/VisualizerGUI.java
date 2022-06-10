@@ -29,12 +29,13 @@ public class VisualizerGUI {
 	JFrame frame;
 	PanelVisualizer panel;
 	JButton[] buttons;
-	JComboBox<String> solve;
+	
 	BubbleSort b;
 	Thread t ;
 	SelectionSort s;
+	
 	String[] optionsToChoose = {"SelectionSort", "BubbleSort", "Banana", "Pineapple", "None of the listed"};
-
+//	JComboBox<String> solve;
 	boolean isActive = false;
 
 	/*
@@ -45,8 +46,9 @@ public class VisualizerGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(800,600));
 		frame.setMaximumSize(new Dimension(800,600));
+		frame.setResizable(false);
 
-		panel = new PanelVisualizer(10);
+		panel = new PanelVisualizer();
 
 		int[] arr =Main.generateArray(100);
 
@@ -128,7 +130,7 @@ public class VisualizerGUI {
 		mainPanel.add(panel, gridBagConstraints); 
 
 		//add Combobox with options
-		solve = new JComboBox<>(optionsToChoose);
+		JComboBox<String> solve = new JComboBox<>(optionsToChoose);
 		gridBagConstraints.gridx = 1;
 		gridBagConstraints.gridy = 2;
 		gridBagConstraints.gridwidth = 1;
@@ -148,7 +150,7 @@ public class VisualizerGUI {
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL; //doesnt fill to top since we anchored to the PAGE_END
 		gridBagConstraints.anchor = GridBagConstraints.PAGE_END;
 		mainPanel.add(submit, gridBagConstraints); 
-		submit.addActionListener(e -> buttonPressed()); 
+		submit.addActionListener(e -> buttonPressed(solve)); 
 
 		//add STOP-Continue button
 		JButton reset=new JButton("Pause/Continue");
@@ -177,8 +179,8 @@ public class VisualizerGUI {
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.anchor = GridBagConstraints.PAGE_END;
 		mainPanel.add(newPuzzle, gridBagConstraints); 
-		newPuzzle.addActionListener(e -> newArray());
-		newPuzzle.setEnabled(false); // buggie need to fix
+		newPuzzle.addActionListener(e -> newArray(mainPanel));
+		newPuzzle.setEnabled(true); // buggie need to fix
 			
 
 		//		panel.add(Box.createRigidArea(new Dimension(50, 0)));
@@ -189,26 +191,33 @@ public class VisualizerGUI {
 
 	}
 
-	void newArray() {
+	void newArray(JPanel mainPanel) {
 		// TODO Auto-generated method stub
-//		panel.removeAll();
-		panel = new PanelVisualizer(10);
+		t.stop();
+		
+		mainPanel.removeAll();
+		panel.removeAll();
+//		panel = new PanelVisualizer(10);
+
+		panel = new PanelVisualizer();
 
 		int[] arr =Main.generateArray(100);
 
 		initialiseButtonsArray(arr,panel);
 		//initialise all sorting threads
-//		b = new BubbleSort(panel,buttons);
-//		s = new SelectionSort(panel,buttons);
+		b = new BubbleSort(panel,buttons);
+		s = new SelectionSort(panel,buttons);
 
 		//initialise the Thread with custom algorithm thread
 		//this will be overwritten by User selection
-		t.stop();
 		
-		t= new Thread();
 
 
 		GUI(arr);
+//		t= new Thread(s);
+
+		
+		panel.repaint();
 		panel.revalidate();
 		
 	}
@@ -217,7 +226,7 @@ public class VisualizerGUI {
 	 * ActionListener for start button pressed.
 	 */
 	@SuppressWarnings("deprecation")
-	void buttonPressed() {
+	void buttonPressed(JComboBox<String> solve) {
 		if(t.isAlive()) {
 			
 			System.out.println(t.getName());
@@ -226,9 +235,12 @@ public class VisualizerGUI {
 		}
 		if(solve.getSelectedItem().equals(Algorithms.BubbleSort.toString())) {
 			t= new Thread(b);
+			System.out.println("BUBBLESORT");
 		}
 		else if(solve.getSelectedItem().equals(Algorithms.SelectionSort.toString())) {
+			
 			t=new Thread(s);
+			System.out.println("SelectionSort");
 		}
 		else {
 			System.out.println("NULL");

@@ -85,7 +85,9 @@ public class BubbleSort implements Runnable{
 				}
 				
 				
+				
 			}
+			arr[length-1-i].setBackground(Color.GREEN);
 		}
 		
 	}

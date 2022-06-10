@@ -14,7 +14,7 @@ public class PanelVisualizer extends JPanel {
 	
 	
 	
-	public PanelVisualizer(int n) {
+	public PanelVisualizer() {
 	
 		this.setSize(new Dimension(500,500));
 		this.setPreferredSize(new Dimension(500,500));

@@ -34,7 +34,7 @@ public class VisualizerGUI {
 	Thread t ;
 	SelectionSort s;
 	
-	String[] optionsToChoose = {"SelectionSort", "BubbleSort", "Banana", "Pineapple", "None of the listed"};
+	String[] optionsToChoose = {"SelectionSort", "BubbleSort", "None of the listed"};
 //	JComboBox<String> solve;
 	boolean isActive = false;
 
